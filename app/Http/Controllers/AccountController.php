@@ -78,6 +78,8 @@ class AccountController extends Controller
         $data=array();
         $data['deposit_cost']= $request->deposit_cost;
         DB::table('accounts')->where('id', $id)->update($data);
+
+
         return response('updated');
     }
 
