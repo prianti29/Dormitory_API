@@ -7,11 +7,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MealController;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 Route::apiResource('/member', MemberController::class);
 Route::apiResource('/cost', CostController::class);
 Route::apiResource('/accounts', AccountController::class);
+Route::apiResource('/meal', MealController::class);
 
 
 
@@ -21,7 +23,6 @@ Route::group([
     'prefix' => 'auth'
 
 ], function () {
-
     Route::post('/login', 'AuthController@login');
     Route::post('/logout', 'AuthController@logout');
     Route::post('/refresh', 'AuthController@refresh');
