@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+
 class MealController extends Controller
 {
     /**
@@ -13,7 +15,7 @@ class MealController extends Controller
      */
     public function index()
     {
-        $meal=DB::table('meals_count')->get();
+        $meal = DB::table('meals_count')->get();
         return response()->json($meal);
     }
 
@@ -35,9 +37,9 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-        $data=array();
-        $data['member_id']= $request->member_id;
-        $data['daily_count']= $request->daily_count;
+        $data = array();
+        $data['member_id'] = $request->member_id;
+        $data['daily_count'] = $request->daily_count;
         DB::table('meals_count')->insert($data);
         return response('Inserted');
     }
@@ -50,7 +52,7 @@ class MealController extends Controller
      */
     public function show($id)
     {
-        $meal=DB::table('meals_count')->where('id', $id)->first();
+        $meal = DB::table('meals_count')->where('id', $id)->first();
         return response()->json($meal);
     }
 
@@ -74,9 +76,9 @@ class MealController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data=array();
-        $data['member_id']= $request->member_id;
-        $data['daily_count']= $request->daily_count;
+        $data = array();
+        $data['member_id'] = $request->member_id;
+        $data['daily_count'] = $request->daily_count;
         DB::table('meals_count')->where('id', $id)->update($data);
         return response('updated');
     }
@@ -92,5 +94,14 @@ class MealController extends Controller
         DB::table('meals_count')->where('id', $id)->first();
         DB::table('meals_count')->where('id', $id)->delete();
         return response('deleted');
+    }
+
+    public function monthlyCount()
+    {
+        $meal = DB::table('meals_count')
+            ->select('member_id', DB::raw('SUM(daily_count) as total_meal'))
+            ->groupBy('member_id')
+            ->get();
+        return response()->json($meal);
     }
 }

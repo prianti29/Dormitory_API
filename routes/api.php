@@ -5,7 +5,6 @@ use App\Http\Controllers\CostController;
 use App\Http\Controllers\MemberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MealController;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
@@ -14,8 +13,8 @@ Route::apiResource('/member', MemberController::class);
 Route::apiResource('/cost', CostController::class);
 Route::apiResource('/accounts', AccountController::class);
 Route::apiResource('/meal', MealController::class);
-
-
+// api/meal/monthly-count
+Route::get('/monthly-count', [MealController::class, 'monthlyCount']);
 
 Route::group([
     'middleware' => 'api',
