@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -44,7 +45,8 @@ class MemberController extends Controller
         $data['phone'] = $request->phone;
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
-        DB::table('members')->insert($data);
+        Member::create($data);
+        // DB::table('members')->insert($data);
         return response('Inserted');
     }
     /**

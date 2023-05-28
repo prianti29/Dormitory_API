@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class MealController extends Controller
 {
@@ -37,9 +38,12 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
+       
+        $current_time = Carbon::now();
         $data = array();
         $data['member_id'] = $request->member_id;
         $data['daily_count'] = $request->daily_count;
+        $data['created_at'] = $current_time;
         DB::table('meals_count')->insert($data);
         return response('Inserted');
     }
@@ -76,9 +80,11 @@ class MealController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $current_time = Carbon::now();
         $data = array();
         $data['member_id'] = $request->member_id;
         $data['daily_count'] = $request->daily_count;
+        $data['updated_at'] = $current_time;
         DB::table('meals_count')->where('id', $id)->update($data);
         return response('updated');
     }
@@ -96,12 +102,17 @@ class MealController extends Controller
         return response('deleted');
     }
 
-    public function monthlyCount()
+    public function monthlyCount(Request $request)
     {
+        // dd($request);
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        //dd($start_date);
         $meal = DB::table('meals_count')
-            ->select('member_id', DB::raw('SUM(daily_count) as total_meal'))
-            ->groupBy('member_id')
-            ->get();
+        ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as total_meal'))
+        ->whereBetween('created_at', [$start_date, $end_date])
+        ->groupBy('member_id')
+        ->get();
         return response()->json($meal);
     }
 }
