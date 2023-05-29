@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Carbon\Carbon;
 
-class MemberController extends Controller
+class MealController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,8 +16,8 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $member = DB::table('members')->get();
-        return response()->json($member);
+        $meal = DB::table('meals_count')->get();
+        return response()->json($meal);
     }
 
     /**
@@ -39,16 +38,16 @@ class MemberController extends Controller
      */
     public function store(Request $request)
     {
+       
+        $current_time = Carbon::now();
         $data = array();
-        $data['member_name'] = $request->member_name;
-        $data['member_type'] = $request->member_type;
-        $data['phone'] = $request->phone;
-        $data['email'] = $request->email;
-        $data['password'] = Hash::make($request->password);
-        Member::create($data);
-        // DB::table('members')->insert($data);
+        $data['member_id'] = $request->member_id;
+        $data['daily_count'] = $request->daily_count;
+        $data['created_at'] = $current_time;
+        DB::table('meals_count')->insert($data);
         return response('Inserted');
     }
+
     /**
      * Display the specified resource.
      *
@@ -57,8 +56,8 @@ class MemberController extends Controller
      */
     public function show($id)
     {
-        $members = DB::table('members')->where('id', $id)->first();
-        return response()->json($members);
+        $meal = DB::table('meals_count')->where('id', $id)->first();
+        return response()->json($meal);
     }
 
     /**
@@ -81,10 +80,12 @@ class MemberController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $current_time = Carbon::now();
         $data = array();
-        $data['member_name'] = $request->member_name;
-        $data['member_type'] = $request->member_type;
-        DB::table('members')->where('id', $id)->update($data);
+        $data['member_id'] = $request->member_id;
+        $data['daily_count'] = $request->daily_count;
+        $data['updated_at'] = $current_time;
+        DB::table('meals_count')->where('id', $id)->update($data);
         return response('updated');
     }
 
@@ -96,8 +97,22 @@ class MemberController extends Controller
      */
     public function destroy($id)
     {
-        DB::table('members')->where('id', $id)->first();
-        DB::table('members')->where('id', $id)->delete();
+        DB::table('meals_count')->where('id', $id)->first();
+        DB::table('meals_count')->where('id', $id)->delete();
         return response('deleted');
+    }
+
+    public function monthlyCount(Request $request)
+    {
+        // dd($request);
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        //dd($start_date);
+        $meal = DB::table('meals_count')
+        ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as total_meal'))
+        ->whereBetween('created_at', [$start_date, $end_date])
+        ->groupBy('member_id')
+        ->get();
+        return response()->json($meal);
     }
 }
