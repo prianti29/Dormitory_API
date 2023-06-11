@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class CostController extends Controller
 {
@@ -15,7 +16,7 @@ class CostController extends Controller
      */
     public function index()
     {
-        $cost=DB::table('cost')->get();
+        $cost = DB::table('cost')->get();
         return response()->json($cost);
     }
 
@@ -37,11 +38,13 @@ class CostController extends Controller
      */
     public function store(Request $request)
     {
-        $data=array();
-        $data['member_id']= $request->member_id;
-        $data['types_of_cost']= $request->types_of_cost;
-        $data['cost_amount']= $request->cost_amount;
-     
+        $current_time = Carbon::now();
+        $data = array();
+        $data['member_id'] = $request->member_id;
+        $data['types_of_cost'] = $request->types_of_cost;
+        $data['cost_amount'] = $request->cost_amount;
+        $data['created_at'] = $current_time;
+
         DB::table('cost')->insert($data);
         return response('Inserted');
     }
@@ -53,7 +56,7 @@ class CostController extends Controller
      */
     public function show($id)
     {
-        $cost=DB::table('cost')->where('id', $id)->first();
+        $cost = DB::table('cost')->where('id', $id)->first();
         return response()->json($cost);
     }
 
@@ -77,9 +80,11 @@ class CostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $data=array();
-        $data['types_of_cost']= $request->types_of_cost;
-        $data['cost_amount']= $request->cost_amount;
+        $current_time = Carbon::now();
+        $data = array();
+        $data['types_of_cost'] = $request->types_of_cost;
+        $data['cost_amount'] = $request->cost_amount;
+        $data['updated_at'] = $current_time;
         DB::table('cost')->where('id', $id)->update($data);
         return response('updated');
     }
@@ -95,5 +100,17 @@ class CostController extends Controller
         DB::table('cost')->where('id', $id)->first();
         DB::table('cost')->where('id', $id)->delete();
         return response('deleted');
+    }
+    public function monthlyCost(Request $request)
+    {
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $meal_cost = DB::table('cost')
+        ->select('member_id', DB::raw('SUM(cost_amount) as total_cost'))
+        ->whereBetween('created_at', [$start_date, $end_date])
+        ->groupBy('member_id')
+        ->get();
+        $total_cost = DB::table('cost')->sum(DB::raw('CAST(cost_amount AS SIGNED INTEGER)'));
+        return response()->json([$meal_cost, "total cost " . "= "  . $total_cost]);
     }
 }

@@ -38,7 +38,7 @@ class MealController extends Controller
      */
     public function store(Request $request)
     {
-       
+
         $current_time = Carbon::now();
         $data = array();
         $data['member_id'] = $request->member_id;
@@ -70,7 +70,6 @@ class MealController extends Controller
     {
         //
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -101,18 +100,17 @@ class MealController extends Controller
         DB::table('meals_count')->where('id', $id)->delete();
         return response('deleted');
     }
-
+    
     public function monthlyCount(Request $request)
     {
-        // dd($request);
         $start_date = $request->start_date;
         $end_date = $request->end_date;
-        //dd($start_date);
         $meal = DB::table('meals_count')
-        ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as total_meal'))
-        ->whereBetween('created_at', [$start_date, $end_date])
-        ->groupBy('member_id')
-        ->get();
-        return response()->json($meal);
+            ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as total_meal'))
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->groupBy('member_id')
+            ->get();
+        $total_meal = DB::table('meals_count')->sum(DB::raw('CAST(daily_count AS SIGNED INTEGER)'));
+        return response()->json([$meal, "total meal " . "= "  . $total_meal]);
     }
 }
