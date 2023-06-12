@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Ramsey\Uuid\Type\Integer;
 
 class MealController extends Controller
 {
@@ -100,7 +101,7 @@ class MealController extends Controller
         DB::table('meals_count')->where('id', $id)->delete();
         return response('deleted');
     }
-    
+
     public function monthlyCount(Request $request)
     {
         $start_date = $request->start_date;
@@ -110,7 +111,13 @@ class MealController extends Controller
             ->whereBetween('created_at', [$start_date, $end_date])
             ->groupBy('member_id')
             ->get();
-        $total_meal = DB::table('meals_count')->sum(DB::raw('CAST(daily_count AS SIGNED INTEGER)'));
-        return response()->json([$meal, "total meal " . "= "  . $total_meal]);
+        $total_meal = 0;
+        foreach($meal as $data){
+            $total_meal += $data->total_meal;
+        }
+        // $total_meal = DB::table('meals_count')->sum(DB::raw('CAST(daily_count AS SIGNED INTEGER)'));
+        $response['individual_meals']=$meal;
+        $response['total_meal'] = $total_meal;
+        return response()->json($response);
     }
 }
