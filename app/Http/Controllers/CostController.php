@@ -135,31 +135,64 @@ class CostController extends Controller
     public function expenseCount(Request $request){
         $start_date = $request->start_date;
         $end_date = $request->end_date;
+         //meal_count
+        // DB::enableQueryLog(); 
+        $meal = DB::table('meals_count')
+            ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as individual_meal'))
+            ->whereBetween('created_at', [$start_date, $end_date])
+            ->groupBy('member_id')
+            ->get();
+        //dd($meal);
+        $individual_meal = 0;
+        foreach($meal as $data){
+            $individual_meal += $data->individual_meal;
+        }
+        // dd(DB::getQueryLog());
+
+
+        //meal_cost
         $meal_cost = DB::table('cost')
         ->select('member_id', DB::raw('CAST(SUM(cost_amount) AS SIGNED) as total_cost'))
         ->whereBetween('created_at', [$start_date, $end_date])
         ->groupBy('member_id')
         ->get();
+       // dd($meal_cost);
         $total_cost = 0;
         foreach($meal_cost as $data){
             $total_cost += $data->total_cost;
         }
-        $meal = DB::table('meals_count')
-            ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as total_meal'))
-            ->whereBetween('created_at', [$start_date, $end_date])
-            ->groupBy('member_id')
-            ->get();
-        $total_meal = 0;
-        foreach($meal as $data){
-            $total_meal += $data->total_meal;
+        
+       
+        //total_deposit
+        $deposit = DB::table('accounts')->select('member_id', DB::raw('CAST(SUM(deposit_cost) AS SIGNED) as total_deposit'))->whereBetween('created_at', [$start_date, $end_date])->groupBy('member_id')
+        ->get();
+        $total_deposit = 0;
+        foreach($deposit as $data){
+            $total_deposit += $data->total_deposit;
         }
-        $per_meal_rate = $total_cost / $total_meal;       
-        $totalMeals = [];
-        foreach ($meal as $record) {
-            $memberId = $record->member_id;
-            $totalMeal = $record->total_meal;
-            $totalMeals[$memberId] = ceil($totalMeal * $per_meal_rate ) ;
+
+        //per head meal rate
+        $per_meal_rate = ceil($total_cost / $individual_meal);
+
+        //monthly individual cost
+        $individual_meal_cost= [];
+        foreach ($meal as $data) {
+            $memberId = $data->member_id;
+            $individual_meal = $data->individual_meal;
+            $individual_meal_cost[$memberId] = ceil($individual_meal * $per_meal_rate );
+            
          }
-        return response()->json($totalMeals );
+
+         $debitCredit = [];
+         foreach($deposit as $data){
+            $memberId = $data->member_id;
+            $total_deposit = $data->total_deposit;
+            $debitCredit[$memberId] = ceil( $total_deposit - $per_meal_rate  );
+         }
+         $response['per_meal_rate'] = $per_meal_rate;
+         $response['individual_meal_cost'] = $individual_meal_cost;
+         $response['debit_credit'] = $debitCredit;
+
+        return response()->json($response);
     }
 }
