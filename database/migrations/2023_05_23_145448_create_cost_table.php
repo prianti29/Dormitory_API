@@ -15,7 +15,6 @@ class CreateCostTable extends Migration
     {
         Schema::create('cost', function (Blueprint $table) {
             $table->id();
-          //  $table->foreignId('member_id')->constrained('members');
             $table->foreignId('member_id')
             ->references('id')
             ->on('members')

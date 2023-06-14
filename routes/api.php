@@ -15,6 +15,10 @@ Route::apiResource('/accounts', AccountController::class);
 Route::apiResource('/meal', MealController::class);
 // api/meal/monthly-count
 Route::get('/monthly-count', [MealController::class, 'monthlyCount']);
+Route::get('/monthly-cost', [CostController::class, 'monthlyCost']);
+Route::get('/meal-rate', [CostController::class, 'mealRate']);
+Route::get('/expense', [CostController::class, 'expenseCount']);
+Route::get('/perHead-deposit', [AccountController::class, 'perHeadDeposit']);
 
 Route::group([
     'middleware' => 'api',
