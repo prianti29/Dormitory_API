@@ -30,13 +30,10 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-        // dd("sjkdghash");
         $credentials = $request->only('email', 'password');
-        //dd(auth()->attempt($credentials));
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-
         return $this->respondWithToken($token);
     }
 
@@ -95,21 +92,25 @@ class AuthController extends Controller
 
     public function register(request $request)
     {
-        $validateData = $request->validate([
+        // dd($request);
+        //dd('asghasiughasidghaghaeirughaiuhaddlsfsddsfdssd');
+        $request->validate([
             'member_name' => ['required', 'string', 'max:255'],
-            'member_id' => ['required', 'integer', 'max:255'],
             'member_type' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:member'],
-            'password' => ['required', 'string', 'min:5', 'confirmed'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:members'],
+            'password' => ['required', 'string', 'min:5'],
         ]);
+        // dd($request);
         $data = array();
         $data['member_name'] = $request->member_name;
-        $data['member_id'] = $request->member_id;
         $data['member_type'] = $request->member_type;
         $data['phone'] = $request->phone;
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
+
+        // dd($data);
+
         DB::table('members')->insert($data);
 
         return $this->login($request);
