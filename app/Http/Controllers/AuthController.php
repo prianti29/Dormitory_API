@@ -23,9 +23,7 @@ class AuthController extends Controller
 
     /**
      * Get a JWT token via given credentials.
-     *
      * @param  \Illuminate\Http\Request  $request
-     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
@@ -34,12 +32,11 @@ class AuthController extends Controller
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-        return view('dashboard');
+         $request->session()->flash('user', Auth::user());
+        return redirect()->intended('api/dashboard');
     }
-
     /**
      * Get the authenticated User
-     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function me()

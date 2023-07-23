@@ -37,10 +37,25 @@ body{
     text-align: center;
     margin-top: 200px;
     color: #f5f5f6;
-    
 }
 .dashboard{
   text-align: center;
   color: #f5f5f6;
 
+}
+.tables-content{
+    color: #f5f5f6;
+    font-size: medium;
+    margin-top: 10px;
+}
+.create-form{
+    color: #f5f5f6;
+   
+}
+.create-form input{
+    margin-top: 10px;
+   width: 30pc;
+}
+.create-form input::placeholder{
+    color: #613fa7;
 }

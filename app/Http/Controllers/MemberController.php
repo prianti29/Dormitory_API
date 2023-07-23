@@ -7,6 +7,7 @@ use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class MemberController extends Controller
 {
@@ -17,8 +18,10 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $member = DB::table('members')->get();
-        return response()->json($member);
+        // $member = DB::table('members')->get();
+        $data['member_list'] = Member::where('member_name', Auth::id())->get();
+        // return response()->json($member);
+        return view('members.index', $data);
     }
 
     /**
@@ -28,7 +31,7 @@ class MemberController extends Controller
      */
     public function create()
     {
-        //
+        return view('members.create');
     }
 
     /**

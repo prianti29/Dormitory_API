@@ -9,7 +9,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MealController;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 
-Route::apiResource('/member', MemberController::class);
+
+
+Route::resource('/member', MemberController::class);
+// Route::get('/member/create', [MemberController::class, 'create']);
+// Route::get("/member", MemberController::class);
 Route::apiResource('/cost', CostController::class);
 Route::apiResource('/accounts', AccountController::class);
 Route::apiResource('/meal', MealController::class);
@@ -25,6 +29,9 @@ Route::group([
     'namespace' => 'App\Http\Controllers',
     'as' => 'auth.'
 ], function () {
+    Route::get('/dashboard', function (Request $request) {
+        return view('dashboard');
+    });
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', 'AuthController@logout');
     Route::post('/refresh', 'AuthController@refresh');
