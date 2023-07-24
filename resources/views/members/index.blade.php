@@ -10,12 +10,16 @@
         <th>Email</th>
         <th>Action</th>
     </tr>
+   
     @foreach ($member_list as $item)
     <tr>
-        <td>{{ $item->name }}</td>
+        <td>{{ $item->member_name }}</td>
+        <td>{{ $item->member_type }}</td>
+        <td>{{ $item->phone}}</td>
+        <td>{{ $item->email}}</td>
         <td>
-            <a href="{{ url("/members/$item->id/edit") }}" class="btn btn-warning btn-sm">Update</a>
-            <form action="{{ url("/members/$item->id") }}" method="POST"
+            <a href="{{ url("/api/member/$item->id/edit") }}" class="btn btn-warning btn-sm">Update</a>
+            <form action="{{ url("/api/member/$item->id") }}" method="POST"
                 onsubmit="return confirm('Do you really want to delete this category?');">
                 @csrf
                 @method('delete')

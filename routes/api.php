@@ -16,7 +16,7 @@ Route::resource('/member', MemberController::class);
 // Route::get("/member", MemberController::class);
 Route::apiResource('/cost', CostController::class);
 Route::apiResource('/accounts', AccountController::class);
-Route::apiResource('/meal', MealController::class);
+Route::resource('/meal', MealController::class);
 // api/meal/monthly-count
 Route::get('/monthly-count', [MealController::class, 'monthlyCount']);
 Route::get('/monthly-cost', [CostController::class, 'monthlyCost']);

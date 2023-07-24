@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\MemberRequest;
 use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,10 +19,9 @@ class MemberController extends Controller
      */
     public function index()
     {
-        // $member = DB::table('members')->get();
-        $data['member_list'] = Member::where('member_name', Auth::id())->get();
-        // return response()->json($member);
+        $data['member_list'] = Member::get();
         return view('members.index', $data);
+      
     }
 
     /**
@@ -40,17 +40,16 @@ class MemberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(MemberRequest $request)
     {
-        $data = array();
-        $data['member_name'] = $request->member_name;
-        $data['member_type'] = $request->member_type;
-        $data['phone'] = $request->phone;
-        $data['email'] = $request->email;
-        $data['password'] = Hash::make($request->password);
-        Member::create($data);
-        // DB::table('members')->insert($data);
-        return response('Inserted');
+        $member_list = new Member();
+        $member_list->member_name = $request->member_name;
+        $member_list->member_type = $request->member_type;
+        $member_list->phone = $request->phone;
+        $member_list->email = $request->email;
+        $member_list->password = Hash::make($request->password);
+        $member_list->save();
+        return redirect()->route('member.index');
     }
     /**
      * Display the specified resource.
@@ -72,7 +71,12 @@ class MemberController extends Controller
      */
     public function edit($id)
     {
-        //
+        $member = Member::find($id);
+        if (!$member) {
+            return redirect('/api/member');
+        }
+        $data["member"] = $member;
+        return view("members.edit", $data);
     }
 
     /**
@@ -82,13 +86,22 @@ class MemberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(MemberRequest $request, $id)
     {
-        $data = array();
-        $data['member_name'] = $request->member_name;
-        $data['member_type'] = $request->member_type;
-        DB::table('members')->where('id', $id)->update($data);
-        return response('updated');
+        // $data = array();
+        // $data['member_name'] = $request->member_name;
+        // $data['member_type'] = $request->member_type;
+        // DB::table('members')->where('id', $id)->update($data);
+        // return response('updated');
+
+        $member_list = Member::find($id);
+        $member_list->member_name = $request->member_name;
+        $member_list->member_type = $request->member_type;
+        $member_list->phone = $request->phone;
+        $member_list->email = $request->email;
+        $member_list->save();
+        $data['member_list'] = Member::get();
+        return view('members.index', $data);
     }
 
     /**
@@ -101,6 +114,8 @@ class MemberController extends Controller
     {
         DB::table('members')->where('id', $id)->first();
         DB::table('members')->where('id', $id)->delete();
-        return response('deleted');
+        // return response('deleted');
+        $data['member_list'] = Member::get();
+        return view('members.index', $data);
     }
 }

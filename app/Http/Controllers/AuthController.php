@@ -32,7 +32,7 @@ class AuthController extends Controller
         if (!$token = auth()->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
-         $request->session()->flash('user', Auth::user());
+        $request->session()->flash('user', Auth::user());
         return redirect()->intended('api/dashboard');
     }
     /**
