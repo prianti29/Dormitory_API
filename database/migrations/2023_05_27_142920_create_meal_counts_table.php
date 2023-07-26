@@ -13,7 +13,7 @@ class CreateMealsCountTable extends Migration
      */
     public function up()
     {
-        Schema::create('meals_count', function (Blueprint $table) {
+        Schema::create('meal_counts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')
             ->references('id')
@@ -31,6 +31,6 @@ class CreateMealsCountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meals_count');
+        Schema::dropIfExists('meal_counts');
     }
 }

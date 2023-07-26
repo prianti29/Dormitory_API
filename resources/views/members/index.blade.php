@@ -2,7 +2,7 @@
 @section('contents')
 <a href="{{ url('/api/member/create') }}" class="btn btn-success" style="margin-top: 10px">Add new Member</a>
 <hr>
-<table class="table table-bordered tables-content">
+<table class="table tables-content">
     <tr>
         <th>Member name</th>
         <th>Member Type</th>
@@ -17,10 +17,10 @@
         <td>{{ $item->member_type }}</td>
         <td>{{ $item->phone}}</td>
         <td>{{ $item->email}}</td>
-        <td>
-            <a href="{{ url("/api/member/$item->id/edit") }}" class="btn btn-warning btn-sm">Update</a>
+        <td class="action-table">
+            <a href="{{ url("/api/member/$item->id/edit") }}" class="btn btn-warning btn-sm action-btn">Update</a>
             <form action="{{ url("/api/member/$item->id") }}" method="POST"
-                onsubmit="return confirm('Do you really want to delete this category?');">
+                onsubmit="return confirm('Do you really want to delete this member?');" class="action-btn">
                 @csrf
                 @method('delete')
                 <input type="submit" value="Delete" class="btn btn-danger btn-sm">

@@ -59,3 +59,14 @@ body{
 .create-form input::placeholder{
     color: #613fa7;
 }
+.action-btn{
+    margin-top: 10px;
+    width: 55px;
+}
+.action-table{
+    margin-left: 70px;
+}
+.top-down-menu{
+    width: 30pc;
+    margin-left: 175px;
+}

@@ -25,8 +25,7 @@
         </div>
         <label class="control-label col-sm-2">Email:</label>
         <div class="col-sm-10">
-            <input type="text" name="email" class="form-control" value="{{ $member->email }}"
-                placeholder="Enter email">
+            <input type="text" name="email" class="form-control" value="{{ $member->email }}" placeholder="Enter email">
         </div>
     </div>
     <div class="form-group">

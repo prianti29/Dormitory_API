@@ -62,7 +62,6 @@ class MemberController extends Controller
         $members = DB::table('members')->where('id', $id)->first();
         return response()->json($members);
     }
-
     /**
      * Show the form for editing the specified resource.
      *
@@ -88,12 +87,6 @@ class MemberController extends Controller
      */
     public function update(MemberRequest $request, $id)
     {
-        // $data = array();
-        // $data['member_name'] = $request->member_name;
-        // $data['member_type'] = $request->member_type;
-        // DB::table('members')->where('id', $id)->update($data);
-        // return response('updated');
-
         $member_list = Member::find($id);
         $member_list->member_name = $request->member_name;
         $member_list->member_type = $request->member_type;
@@ -114,7 +107,6 @@ class MemberController extends Controller
     {
         DB::table('members')->where('id', $id)->first();
         DB::table('members')->where('id', $id)->delete();
-        // return response('deleted');
         $data['member_list'] = Member::get();
         return view('members.index', $data);
     }
