@@ -13,7 +13,7 @@ class CreateCostTable extends Migration
      */
     public function up()
     {
-        Schema::create('cost', function (Blueprint $table) {
+        Schema::create('costs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')
             ->references('id')

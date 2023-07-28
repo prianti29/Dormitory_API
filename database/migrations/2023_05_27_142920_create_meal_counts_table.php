@@ -16,9 +16,9 @@ class CreateMealsCountTable extends Migration
         Schema::create('meal_counts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')
-            ->references('id')
-            ->on('members')
-            ->onDelete('cascade');
+                ->references('id')
+                ->on('members')
+                ->onDelete('cascade');
             $table->integer('daily_count')->default(0);
             $table->timestamps();
         });

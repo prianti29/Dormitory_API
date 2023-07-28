@@ -15,7 +15,8 @@ class AccountController extends Controller
     public function index()
     {
         $account=DB::table('accounts')->get();
-        return response()->json($account);
+    
+        return view('accounts.index', ['account'=>$account]);
     }
 
     /**

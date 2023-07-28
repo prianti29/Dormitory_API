@@ -12,16 +12,15 @@ use Tymon\JWTAuth\Contracts\Providers\Auth;
 
 
 Route::resource('/member', MemberController::class);
-// Route::get('/member/create', [MemberController::class, 'create']);
-// Route::get("/member", MemberController::class);
-Route::apiResource('/cost', CostController::class);
-Route::apiResource('/accounts', AccountController::class);
+Route::resource('/cost', CostController::class);
+Route::resource('/accounts', AccountController::class);
 Route::resource('/meal', MealController::class);
 // api/meal/monthly-count
 Route::get('/monthly-count', [MealController::class, 'monthlyCount']);
 Route::get('/monthly-count-view', [MealController::class, 'monthlyCountView']);
 Route::get('/monthly-cost', [CostController::class, 'monthlyCost']);
-Route::get('/meal-rate', [CostController::class, 'mealRate']);
+Route::get('/monthly-cost-view', [CostController::class, 'monthlyCostView']);
+// Route::get('/meal-rate', [CostController::class, 'mealRate']);
 Route::get('/expense', [CostController::class, 'expenseCount']);
 Route::get('/perHead-deposit', [AccountController::class, 'perHeadDeposit']);
 

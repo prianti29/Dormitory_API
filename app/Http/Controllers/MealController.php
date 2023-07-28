@@ -100,7 +100,6 @@ class MealController extends Controller
     }
     public function monthlyCount(Request $request)
     {
-        // $meal_list = new MealCount();
         $start_date = $request->start_date;
         $end_date = $request->end_date;
         $meal = DB::table('meal_counts')
@@ -112,15 +111,6 @@ class MealController extends Controller
         foreach ($meal as $data) {
             $total_meal += $data->total_meal;
         }
-        // $response['individual_meals']=$meal;
-        // $response['total_meal'] = $total_meal;
-        // return response()->json($response);
-
-        // $meal_list->individual_count = $request->meal;
-        // $meal_list->total_meal = $request->total_meal;
-        // $meal_list->save();
-        // return redirect()->route('meal.monthly-count-view');
-        
         return view('meals.meal_count', [
             'individual_meals' => $meal,
             'total_meal' => $total_meal,

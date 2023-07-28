@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('contents')
 <a href="{{ url('/api/meal/create') }}" class="btn btn-success" style="margin-top: 10px">Add meal</a>
-<a href="{{ url('/api/monthly-count-view') }}" class="btn btn-success" style="margin-top: 10px">meals Details</a>
-<hr>
+<a href="{{ url('/api/monthly-count-view') }}" class="btn btn-success" style="margin-top: 10px">meal Details</a>
+
 <table class="table tables-content">
 <tr>
     <th>member id</th>
