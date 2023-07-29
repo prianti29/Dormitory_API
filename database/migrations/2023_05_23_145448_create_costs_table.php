@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateMealsCountTable extends Migration
+class CreateCostTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateMealsCountTable extends Migration
      */
     public function up()
     {
-        Schema::create('meals_count', function (Blueprint $table) {
+        Schema::create('costs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('member_id')
             ->references('id')
             ->on('members')
             ->onDelete('cascade');
-            $table->integer('daily_count')->default(0);
+            $table->string('types_of_cost');
+            $table->integer('cost_amount');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateMealsCountTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('meals_count');
+        Schema::dropIfExists('cost');
     }
 }

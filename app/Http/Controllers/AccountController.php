@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 class AccountController extends Controller
 {
     /**
@@ -14,7 +15,8 @@ class AccountController extends Controller
     public function index()
     {
         $account=DB::table('accounts')->get();
-        return response()->json($account);
+    
+        return view('accounts.index', ['account'=>$account]);
     }
 
     /**
@@ -35,10 +37,12 @@ class AccountController extends Controller
      */
     public function store(Request $request)
     {
+        $current_time = Carbon::now();
         $data=array();
         $data['member_id']= $request->member_id;
         $data['deposit_cost']= $request->deposit_cost;
-     
+        $data['created_at'] = $current_time;
+
         DB::table('accounts')->insert($data);
         return response('Inserted');
     }
@@ -75,8 +79,10 @@ class AccountController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $current_time = Carbon::now();
         $data=array();
         $data['deposit_cost']= $request->deposit_cost;
+        $data['updated_at'] = $current_time;
         DB::table('accounts')->where('id', $id)->update($data);
         return response('updated');
     }
@@ -92,5 +98,19 @@ class AccountController extends Controller
         DB::table('accounts')->where('id', $id)->first();
         DB::table('accounts')->where('id', $id)->delete();
         return response('deleted');
+    }
+
+    public function perHeadDeposit(Request $request){
+        $start_date = $request->start_date;
+        $end_date = $request->end_date;
+        $deposit = DB::table('accounts')->select('member_id', DB::raw('CAST(SUM(deposit_cost) AS SIGNED) as total_deposit'))->whereBetween('created_at', [$start_date, $end_date])->groupBy('member_id')
+        ->get();
+        $total_deposit = 0;
+        foreach($deposit as $data){
+            $total_deposit += $data->total_deposit;
+        }
+        $response['individual_deposit']=$deposit;
+        $response['total_deposit']=(int)$total_deposit;
+        return response()->json($response);
     }
 }

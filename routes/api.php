@@ -9,23 +9,33 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\MealController;
 use Tymon\JWTAuth\Contracts\Providers\Auth;
 
-Route::apiResource('/member', MemberController::class);
-Route::apiResource('/cost', CostController::class);
-Route::apiResource('/accounts', AccountController::class);
-Route::apiResource('/meal', MealController::class);
+
+
+Route::resource('/member', MemberController::class);
+Route::resource('/cost', CostController::class);
+Route::resource('/accounts', AccountController::class);
+Route::resource('/meal', MealController::class);
 // api/meal/monthly-count
 Route::get('/monthly-count', [MealController::class, 'monthlyCount']);
+Route::get('/monthly-count-view', [MealController::class, 'monthlyCountView']);
+Route::get('/monthly-cost', [CostController::class, 'monthlyCost']);
+Route::get('/monthly-cost-view', [CostController::class, 'monthlyCostView']);
+// Route::get('/meal-rate', [CostController::class, 'mealRate']);
+Route::get('/expense', [CostController::class, 'expenseCount']);
+Route::get('/perHead-deposit', [AccountController::class, 'perHeadDeposit']);
 
 Route::group([
     'middleware' => 'api',
     'namespace' => 'App\Http\Controllers',
-    'prefix' => 'auth'
-
+    'as' => 'auth.'
 ], function () {
-    Route::post('/login', 'AuthController@login');
+    Route::get('/dashboard', function (Request $request) {
+        return view('dashboard');
+    });
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', 'AuthController@logout');
     Route::post('/refresh', 'AuthController@refresh');
     Route::get('/me', 'AuthController@me');
     Route::post('/payload', 'AuthController@payload');
-    Route::post('/register', 'AuthController@register');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
 });

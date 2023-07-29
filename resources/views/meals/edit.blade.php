@@ -1,0 +1,31 @@
+@extends('layouts.app')
+@section('contents')
+
+<h3 style="color: aliceblue">Edit meals count</h3>
+<hr>
+
+<form class="form-horizontal create-form" action="{{ url("/api/meal/$meal->id") }}" method="POST">
+    @method("put")
+    @csrf
+    <label class="control-label col-sm-2">Daily Count:</label>
+    <div class="col-sm-10">
+        <input type="text" name="daily_count" class="form-control" value="{{ $meal->meal_count }}"
+            placeholder=" Enter daily count">
+    </div>
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-10" style="margin:5px 0px 0px 180px ">
+            <button type="submit" class="btn btn-success">Update</button>
+        </div>
+    </div>
+</form>
+@if ($errors->any())
+<div class="alert alert-danger">
+    <ul>
+        @foreach ($errors->all() as $error)
+        <li>{{ $error }}</li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+@endsection
