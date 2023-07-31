@@ -37,7 +37,10 @@ Route::group([
         return view('dashboard');
     });
     Route::post('/login', [AuthController::class, 'login'])->name('login');
-    Route::post('/logout', 'AuthController@logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Route::post('/logout', 'AuthController@logout')->name('logout');
+
+    // Route::post('/logout', 'AuthController@logout');
     Route::post('/refresh', 'AuthController@refresh');
     Route::get('/me', 'AuthController@me');
     Route::post('/payload', 'AuthController@payload');

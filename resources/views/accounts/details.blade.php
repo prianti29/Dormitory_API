@@ -1,5 +1,7 @@
 @extends('layouts.app')
 @section('contents')
+
+
 <form class="form-horizontal" action="{{ url('/api/perHead-deposit') }}" method="GET">
     @csrf
     <div class="form-group create-form">

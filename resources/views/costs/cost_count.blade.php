@@ -3,12 +3,12 @@
 <h2 style="color: aliceblue">Total cost: {{ $total_cost}}</h2>
 <h2 style="color: aliceblue">Per Meal Rate:  {{ $per_meal_rate }}</h2>
 <hr>
-<table class="table tables-content" style="width: 700px">
+<table class="table tables-content" style="width: 700px; text-align: center">
     <tr>
-        <th>Member id</th>
-        <th>Individual market cost</th>
-        <th>Individual meal cost</th>
-        <th>Meal Debit/Credit</th>
+        <th style="text-align: center">Member id</th>
+        <th style="text-align: center">Individual market cost</th>
+        <th style="text-align: center">Individual meal cost</th>
+        <th style="text-align: center">Meal Debit/Credit</th>
     </tr>
     @foreach ($individual_cost as $item)
     @php
