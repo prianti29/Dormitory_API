@@ -6,7 +6,7 @@
     <tr>
         <th>Member id</th>
         <th>Types of cost</th>
-        <th>Amount of cost</th>
+        <th>Costing Amount</th>
         <th>Action</th>
     </tr>
     @foreach ($cost_list as $item)

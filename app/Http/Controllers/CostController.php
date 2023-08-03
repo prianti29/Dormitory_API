@@ -38,8 +38,6 @@ class CostController extends Controller
     {
         $member_list = DB::table('members')->get();
         return view('costs.create', ['member_list' => $member_list]);
-        // $data["member_list"] = Member::where('created_by', Auth::id())->get();
-        // return view('costs.create', ['member_list' => $data]);
     }
 
     /**
@@ -156,7 +154,6 @@ class CostController extends Controller
         }
 
         //debit/credit
-
         $deposit = DB::table('accounts')->select('member_id', DB::raw('CAST(SUM(deposit_cost) AS SIGNED) as total_deposit'))->whereBetween('created_at', [$start_date, $end_date])->groupBy('member_id')
             ->get();
         $total_deposit = 0;
@@ -179,69 +176,59 @@ class CostController extends Controller
         ]);
     }
 
+    // public function expenseCount(Request $request)
+    // {
+    //     $start_date = $request->start_date;
+    //     $end_date = $request->end_date;
+    //     $meal = DB::table('meal_counts')
+    //         ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as individual_meal'))
+    //         ->whereBetween('created_at', [$start_date, $end_date])
+    //         ->groupBy('member_id')
+    //         ->get();
+    //     $individual_meal = 0;
+    //     foreach ($meal as $data) {
+    //         $individual_meal += $data->individual_meal;
+    //     }
 
+    //     //meal_cost
+    //     $meal_cost = DB::table('costs')
+    //         ->select('member_id', DB::raw('CAST(SUM(cost_amount) AS SIGNED) as total_cost'))
+    //         ->whereBetween('created_at', [$start_date, $end_date])
+    //         ->groupBy('member_id')
+    //         ->get();
+    //     // dd($meal_cost);
+    //     $total_cost = 0;
+    //     foreach ($meal_cost as $data) {
+    //         $total_cost += $data->total_cost;
+    //     }
+    //     $deposit = DB::table('accounts')->select('member_id', DB::raw('CAST(SUM(deposit_cost) AS SIGNED) as total_deposit'))->whereBetween('created_at', [$start_date, $end_date])->groupBy('member_id')
+    //         ->get();
+    //     $total_deposit = 0;
+    //     foreach ($deposit as $data) {
+    //         $total_deposit += $data->total_deposit;
+    //     }
 
+    //     //per head meal rate
+    //     $per_meal_rate = ceil($total_cost / $individual_meal);
 
+    //     //monthly individual cost
+    //     $individual_meal_cost = [];
+    //     foreach ($meal as $data) {
+    //         $memberId = $data->member_id;
+    //         $individual_meal = $data->individual_meal;
+    //         $individual_meal_cost[$memberId] = ceil($individual_meal * $per_meal_rate);
+    //     }
 
+    //     $debitCredit = [];
+    //     foreach ($deposit as $data) {
+    //         $memberId = $data->member_id;
+    //         $total_deposit = $data->total_deposit;
+    //         $debitCredit[$memberId] = ceil($total_deposit - $per_meal_rate);
+    //     }
+    //     $response['per_meal_rate'] = $per_meal_rate;
+    //     $response['individual_meal_cost'] = $individual_meal_cost;
+    //     $response['debit_credit'] = $debitCredit;
 
-
-
-
-
-
-    public function expenseCount(Request $request)
-    {
-        $start_date = $request->start_date;
-        $end_date = $request->end_date;
-        $meal = DB::table('meal_counts')
-            ->select('member_id', DB::raw('CAST(SUM(daily_count) AS SIGNED) as individual_meal'))
-            ->whereBetween('created_at', [$start_date, $end_date])
-            ->groupBy('member_id')
-            ->get();
-        $individual_meal = 0;
-        foreach ($meal as $data) {
-            $individual_meal += $data->individual_meal;
-        }
-
-        //meal_cost
-        $meal_cost = DB::table('costs')
-            ->select('member_id', DB::raw('CAST(SUM(cost_amount) AS SIGNED) as total_cost'))
-            ->whereBetween('created_at', [$start_date, $end_date])
-            ->groupBy('member_id')
-            ->get();
-        // dd($meal_cost);
-        $total_cost = 0;
-        foreach ($meal_cost as $data) {
-            $total_cost += $data->total_cost;
-        }
-        $deposit = DB::table('accounts')->select('member_id', DB::raw('CAST(SUM(deposit_cost) AS SIGNED) as total_deposit'))->whereBetween('created_at', [$start_date, $end_date])->groupBy('member_id')
-            ->get();
-        $total_deposit = 0;
-        foreach ($deposit as $data) {
-            $total_deposit += $data->total_deposit;
-        }
-
-        //per head meal rate
-        $per_meal_rate = ceil($total_cost / $individual_meal);
-
-        //monthly individual cost
-        $individual_meal_cost = [];
-        foreach ($meal as $data) {
-            $memberId = $data->member_id;
-            $individual_meal = $data->individual_meal;
-            $individual_meal_cost[$memberId] = ceil($individual_meal * $per_meal_rate);
-        }
-
-        $debitCredit = [];
-        foreach ($deposit as $data) {
-            $memberId = $data->member_id;
-            $total_deposit = $data->total_deposit;
-            $debitCredit[$memberId] = ceil($total_deposit - $per_meal_rate);
-        }
-        $response['per_meal_rate'] = $per_meal_rate;
-        $response['individual_meal_cost'] = $individual_meal_cost;
-        $response['debit_credit'] = $debitCredit;
-
-        return response()->json($response);
-    }
+    //     return response()->json($response);
+    // }
 }
